@@ -191,3 +191,111 @@ $ python 2-main.py
 ---- End of batch ----
 
 ____________________________
+Lazy loading Paginated Data
+mandatory
+Objective: Simulte fetching paginated data from the users database using a generator to lazily load each page
+
+Instructions:
+
+Implement a generator function lazypaginate(pagesize) that implements the paginate_users(page_size, offset) that will only fetch the next page when needed at an offset of 0.
+
+You must only use one loop
+Include the paginate_users function in your code
+You must use the yield generator
+Prototype:
+def lazy_paginate(page_size)
+#!/usr/bin/python3
+seed = __import__('seed')
+
+
+def paginate_users(page_size, offset):
+    connection = seed.connect_to_prodev()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(f"SELECT * FROM user_data LIMIT {page_size} OFFSET {offset}")
+    rows = cursor.fetchall()
+    connection.close()
+    return rows
+
+
+
+
+(venv) faithokoth@Faiths-MacBook-Pro python-generators-0x00 % cat 3-main.py
+#!/usr/bin/python3
+import sys
+lazy_paginator = __import__('2-lazy_paginate').lazy_pagination
+
+
+try:
+    for page in lazy_paginator(100):
+        for user in page:
+            print(user)
+
+except BrokenPipeError:
+    sys.stderr.close()
+(venv) faithokoth@Faiths-MacBook-Pro python-generators-0x00  % python 3-main.py | head -n 7
+
+{'user_id': '00234e50-34eb-4ce2-94ec-26e3fa749796', 'name': 'Dan Altenwerth Jr.', 'email': 'Molly59@gmail.com', 'age': 67}
+
+{'user_id': '006bfede-724d-4cdd-a2a6-59700f40d0da', 'name': 'Glenda Wisozk', 'email': 'Miriam21@gmail.com', 'age': 119}
+
+{'user_id': '006e1f7f-90c2-45ad-8c1d-1275d594cc88', 'name': 'Daniel Fahey IV', 'email': 'Delia.Lesch11@hotmail.com', 'age': 49}
+
+{'user_id': '00af05c9-0a86-419e-8c2d-5fb7e899ae1c', 'name': 'Ronnie Bechtelar', 'email': 'Sandra19@yahoo.com', 'age': 22}
+
+{'user_id': '00cc08cc-62f4-4da1-b8e4-f5d9ef5dbbd4', 'name': 'Alma Bechtelar', 'email': 'Shelly_Balistreri22@hotmail.com', 'age': 102}
+
+{'user_id': '01187f09-72be-4924-8a2d-150645dcadad', 'name': 'Jonathon Jones', 'email': 'Jody.Quigley-Ziemann33@yahoo.com', 'age': 116}
+
+{'user_id': '01ab6c5d-7ae2-4968-991a-d63e93d8d025', 'name': 'Forrest Heaney', 'email': 'Albert51@hotmail.com', 'age': 104}
+(venv) faithokoth@Faiths-MacBook-Pro python-generators-0x00 % 
+Repo:
+
+GitHub repository: alx-backend-python
+Directory: python-generators-0x00
+File: 2-lazy_paginate.py
+
+$ python 3-main.py
+{'user_id': '0021d5a1-f01d-4343-88b2-f2937130efbe', 'name': 'Roy Sporer', 'email': 'Russell_Jast64@gmail.com', 'age': Decimal('34.00')}
+{'user_id': '00329655-4894-472c-9ca7-8652f644c50c', 'name': 'Dr. Laurence Thiel', 'email': 'Laurie.Lemke20@yahoo.com', 'age': Decimal('22.00')}
+{'user_id': '007147bb-df0d-4b63-ae87-0af242b0cd88', 'name': 'Spencer Shields', 'email': 'Calvin_Hayes15@gmail.com', 'age': Decimal('67.00')}
+{'user_id': '00b4fb6e-ad99-4717-a07b-329cf51753a1', 'name': 'Tammy Gerhold IV', 'email': 'Fred_Koelpin@hotmail.com', 'age': Decimal('14.00')}
+{'user_id': '00c86421-cb39-463d-a488-1cbd11456256', 'name': 'Dr. Kristine Buckridge', 'email': 'Bryant.Schmitt@hotmail.com', 'age': Decimal('92.00')}   
+{'user_id': '00e54b68-c2a8-49a5-8f05-4629c7c35a59', 'name': 'Nancy Mueller', 'email': 'Jimmy_Wolf@yahoo.com', 'age': Decimal('42.00')}
+{'user_id': '00ff91a6-d193-439c-8b9f-967ee17f70e2', 'name': 'Ms. Gina Kuhic', 'email': 'Debbie83@hotmail.com', 'age': Decimal('78.00')}
+{'user_id': '017aa09a-3d71-465d-a4ca-d7e5041a3e35', 'name': 'Kellie Howe', 'email': 'Toni.Legros@hotmail.com', 'age': Decimal('87.00')}
+{'user_id': '01c24d09-fe1e-49ac-9e8b-30ff8871d505', 'name': 'Alexis Doyle', 'email': 'Heidi_Rowe@gmail.com', 'age': Decimal('118.00')}
+{'user_id': '0216c38a-d1b6-464f-b4dd-d977f59df477', 'name': 'Wilbert Daugherty V', 'email': 'Roman24@yahoo.com', 'age': Decimal('62.00')}
+{'user_id': '0221092c-8ba7-4b65-8b61-5b789c0e525c', 'name': 'Hilda Schroeder', 'email': 'Constance.Schmidt54@hotmail.com',
+
+## 💡 شرح مبسط للفرق:
+
+| المفهوم | إيه اللي بيعمله |
+| --- | --- |
+| `stream_users()` | بيقرأ الصفوف واحد واحد (streaming) |
+| `stream_users_in_batches()` | بيقرأ الصفوف في دفعات (batches) حجمها ثابت |
+| `lazy_pagination()` | بيقرأ *صفحات بيانات* عند الطلب (pagination) — كل صفحة تعتبر دفعة بيانات لكن مفيش تحميل مسبق |
+
+4. Memory-Efficient Aggregation with Generators
+mandatory
+Objective: to use a generator to compute a memory-efficient aggregate function i.e average age for a large dataset
+
+Instruction:
+
+Implement a generator stream_user_ages() that yields user ages one by one.
+
+Use the generator in a different function to calculate the average age without loading the entire dataset into memory
+
+Your script should print Average age of users: average age
+
+You must use no more than two loops in your script
+
+You are not allowed to use the SQL AVERAGE
+
+Repo:
+
+GitHub repository: alx-backend-python
+Directory: python-generators-0x00
+File: 4-stream_ages.py
+🔍 مثال ناتج التشغيل:
+$ python 4-stream_ages.py
+Average age of users: 62.42
