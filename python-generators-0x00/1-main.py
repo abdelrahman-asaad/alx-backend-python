@@ -8,5 +8,5 @@ stream_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(stream_module)
 
 # استخدم الفنكشن من الموديول
-for user in islice(stream_module.stream_users(), 6):
+for user in islice(stream_module.stream_users(), 6): # جلب أول 6 مستخدمين
     print(user)
