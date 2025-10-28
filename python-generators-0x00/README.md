@@ -57,3 +57,5 @@ Repo:
 GitHub repository: alx-backend-python
 Directory: python-generators-0x00
 File: seed.py, README.md
+
+$ python 0-main.py
