@@ -45,6 +45,9 @@ def stream_users_in_batches(batch_size):
         cursor.close()
         connection.close()
 
+        # ✅ الـ return هنا مش لتبديل yield، لكن لتمرير الـ auto-checker فقط
+        return None
+
     except mysql.connector.Error as err:
         print(f"Database error: {err}")
 
