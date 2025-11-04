@@ -19,7 +19,7 @@ def log_queries(func):
 @log_queries
 def fetch_all_users(query):
     conn = sqlite3.connect('users.db')
-    cursor = conn.cursor()
+    cursor = conn.cursor() # to create database object to excute database queyries
     cursor.execute(query)
     results = cursor.fetchall()
     conn.close()

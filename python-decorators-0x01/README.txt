@@ -59,3 +59,32 @@ Repo:
 GitHub repository: alx-backend-python
 Directory: python-decorators-0x01
 File: 1-with_db_connection.py
+___________________
+2. Transaction Management Decorator
+mandatory
+Objective: create a decorator that manages database transactions by automatically committing or rolling back changes
+
+Instructions:
+
+Complete the script below by writing a decorator transactional(func) that ensures a function running a database operation is wrapped inside a transaction.If the function raises an error, rollback; otherwise commit the transaction.
+
+Copy the with_db_connection created in the previous task into the script
+
+import sqlite3 
+import functools
+
+"""your code goes here"""
+
+@with_db_connection 
+@transactional 
+def update_user_email(conn, user_id, new_email): 
+cursor = conn.cursor() 
+cursor.execute("UPDATE users SET email = ? WHERE id = ?", (new_email, user_id)) 
+#### Update user's email with automatic transaction handling 
+
+update_user_email(user_id=1, new_email='Crawford_Cartwright@hotmail.com')
+Repo:
+
+GitHub repository: alx-backend-python
+Directory: python-decorators-0x01
+File: 2-transactional.py

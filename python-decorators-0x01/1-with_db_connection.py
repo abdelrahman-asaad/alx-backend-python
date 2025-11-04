@@ -42,6 +42,8 @@ def get_user_by_id(conn, user_id):
 user = get_user_by_id(user_id=1)
 print(user)
 
+
+
 '''💡 شرح مختصر:
 
 with_db_connection هو ديكوريتور (decorator) بيهتم بإدارة الاتصال بالـ database.
