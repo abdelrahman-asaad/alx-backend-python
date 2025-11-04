@@ -18,7 +18,9 @@ def with_db_connection(func):
             # تمرير الاتصال للفنكشن
             result = func(conn, *args, **kwargs) #function calling with passing 'conn' argument to it and store its value in 'result'
             return result
-        finally:
+        
+        
+        finally: #after executing the function within its whole decorators مهمة جداً
             # إغلاق الاتصال بعد الانتهاء (حتى لو حصل خطأ)
             conn.close()
     return wrapper
@@ -37,7 +39,7 @@ def transactional(func):
     def wrapper(conn, *args, **kwargs):
         try:
             # تنفيذ الدالة (العملية على قاعدة البيانات)
-            result = func(conn, *args, **kwargs) #excute the function which returns 'result'
+            result = func(conn, *args, **kwargs) #calling function and storing its value in 'result'
             
             # ✅ لو نجحت العملية → نحفظ التغييرات
             conn.commit()
@@ -54,8 +56,8 @@ def transactional(func):
 # ===============================
 # 🔹 استخدام الـ Decorators معًا
 # ===============================
-@with_db_connection                       # it passes 'conn' as an argument to function 
-@transactional
+@with_db_connection               #excuted first till 'finally'        # it passes 'conn' as an argument to function 
+@transactional                    #excuted second then continue to 'finally' in @with_db_connection
 def update_user_email(conn, user_id, new_email):
     """
     دالة لتحديث إيميل المستخدم في قاعدة البيانات.
@@ -74,22 +76,24 @@ def update_user_email(conn, user_id, new_email):
 update_user_email(user_id=1, new_email='Crawford_Cartwright@hotmail.com')
 
 
+
+
 '''💡 شرح مبسط للتدفق:
 
-@with_db_connection
-يفتح اتصال بـ users.db ويغلقه بعد تنفيذ الدالة.
+finally بتتنفذ بعد ما الدالة تخلص تنفيذ كل الديكيروترز
 
-@transactional
-يضمن إن أي عملية داخل الدالة:
+الترتيب كده:
 
-تعمل commit لو نجحت.
+with_db_connection يبدأ → يفتح الاتصال.
 
-تعمل rollback لو حصل خطأ.
+transactional يبدأ → ينفذ الكويري.
 
-update_user_email
+بعد التنفيذ، transactional يعمل:
 
-بتستقبل conn من الديكوريتر الأول.
+commit() أو rollback()
 
-تنفذ أمر SQL لتحديث البريد الإلكتروني.
+ويدخل في finally بتاعه.
 
-لو حصل أي استثناء، بيتم rollback تلقائيًا.'''
+بعد ما يخلص، with_db_connection يدخل في finally بتاعه → يقفل الاتصال.
+
+'''
