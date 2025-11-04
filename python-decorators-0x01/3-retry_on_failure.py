@@ -29,7 +29,7 @@ def retry_on_failure(retries=3, delay=2):
             for attempt in range(1, retries + 1):
                 try:
                     print(f"Attempt {attempt} of {retries}...")
-                    return func(*args, **kwargs)  # try to execute the function and exit the for loop because of'return'
+                    return func(*args, **kwargs)  # try to execute the function and exit the for loop because of'return' مهمة
                 except Exception as e:
                     print(f"❌ Error: {e}")
                     if attempt < retries:

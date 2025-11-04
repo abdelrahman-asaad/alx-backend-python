@@ -16,7 +16,7 @@ def with_db_connection(func):
         conn = sqlite3.connect('users.db')
         try:
             # تمرير الاتصال للفنكشن
-            result = func(conn, *args, **kwargs) #function calling with passing 'conn' argument to it and store its value in 'result'
+            result = func(conn, *args, **kwargs) #function calling with passing 'conn' argument to it and store its value "return" in 'result'
             return result
         
         
