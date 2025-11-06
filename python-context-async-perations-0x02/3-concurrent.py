@@ -10,6 +10,8 @@ async def async_fetch_users():
         print("👥 All Users:")
         for row in results:
             print(row)
+        
+        return results    
 
 # 🔹 دالة ثانية: تجيب المستخدمين اللي عمرهم أكبر من 40
 async def async_fetch_older_users():
