@@ -1,0 +1,11 @@
+# messaging_app/chats/urls.py
+from rest_framework.routers import DefaultRouter
+from .views import ConversationViewSet, MessageViewSet
+
+# إنشاء الراوتر
+router = DefaultRouter()
+router.register(r'conversations', ConversationViewSet, basename='conversation')
+router.register(r'messages', MessageViewSet, basename='message')
+
+# URLs النهائية
+urlpatterns = router.urls

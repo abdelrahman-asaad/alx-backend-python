@@ -1,12 +1,12 @@
 # messaging_app/chats/views.py
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, filters  # ✅ استيراد filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 
 
-# 1️⃣ ViewSet للمحادثات
+# 1️⃣ Conversation ViewSet
 class ConversationViewSet(viewsets.ModelViewSet):
     """
     إدارة المحادثات:
@@ -15,8 +15,12 @@ class ConversationViewSet(viewsets.ModelViewSet):
     - retrieve: عرض محادثة واحدة مع رسائلها
     """
     queryset = Conversation.objects.all()  # كل المحادثات
-    serializer_class = ConversationSerializer  # السريالايزر المستخدم
-    permission_classes = [permissions.IsAuthenticated]  # لازم تسجيل دخول
+    serializer_class = ConversationSerializer
+    permission_classes = [permissions.IsAuthenticated]  # تسجيل دخول مطلوب
+
+    # تمكين البحث والفلترة حسب أسماء المشاركين
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['participants__first_name', 'participants__last_name']
 
     # Action مخصص لإرسال رسالة لمحادثة موجودة
     @action(detail=True, methods=['post'], url_path='send-message')
@@ -24,13 +28,12 @@ class ConversationViewSet(viewsets.ModelViewSet):
         conversation = self.get_object()  # جلب المحادثة بواسطة pk
         serializer = MessageSerializer(data=request.data)  # بيانات الرسالة الجديدة
         if serializer.is_valid():  # التحقق من صحة البيانات
-            # حفظ الرسالة وربطها بالمرسل والمحادثة
             serializer.save(sender=request.user, conversation=conversation)
             return Response(serializer.data, status=201)  # إعادة البيانات بعد الإنشاء
         return Response(serializer.errors, status=400)  # أخطاء التحقق
 
 
-# 2️⃣ ViewSet للرسائل
+# 2️⃣ Message ViewSet
 class MessageViewSet(viewsets.ModelViewSet):
     """
     إدارة الرسائل:
@@ -38,12 +41,13 @@ class MessageViewSet(viewsets.ModelViewSet):
     - create: إرسال رسالة جديدة
     """
     queryset = Message.objects.all()  # كل الرسائل
-    serializer_class = MessageSerializer  # السريالايزر المستخدم
-    permission_classes = [permissions.IsAuthenticated]  # لازم تسجيل دخول
+    serializer_class = MessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-       # ربط الرسالة بالمستخدم الحالي
+        # ربط الرسالة بالمستخدم الحالي عند الإنشاء
         serializer.save(sender=self.request.user)
+
 
 #perfrom_create is a built-in method in Django REST Framework's ModelViewSet that allows you to customize
 # the creation behavior of an object when a POST request is made to create a new instance of serializer.
