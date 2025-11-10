@@ -34,10 +34,8 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     #nested serializers
 
-    # تضمين المشاركين بشكل nested
     participants = UserSerializer(many=True, read_only=True)
     
-    # تضمين الرسائل بشكل nested
     messages = MessageSerializer(many=True, read_only=True)
     
     #related name "messages" from Message model to Conversation model
@@ -61,8 +59,9 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     # ValidationError للتأكد من وجود مشاركين في المحادثة
     def validate(self, data):
-        if self.instance and self.instance.participants.count() == 0:
+        if self.instance and self.instance.participants.count() == 0: 
             raise serializers.ValidationError("Conversation must have at least one participant.")
+        #لو المحادثة موجودة وفيها 0 مشاركين → ارمي ValidationError.
         return data
 
 
