@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'chats',
     'rest_framework',
 ]
+AUTH_USER_MODEL = 'chats.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
