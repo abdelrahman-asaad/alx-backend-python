@@ -67,6 +67,17 @@ TEMPLATES = [
         },
     },
 ]
+# ✅ Django REST Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        # ممكن تضيف JWT بعدين زي:
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 WSGI_APPLICATION = 'messaging_app.wsgi.application'
 
