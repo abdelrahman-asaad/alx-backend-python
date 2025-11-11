@@ -23,6 +23,8 @@ async def async_fetch_older_users():
         for row in results:
             print(row)
 
+        return results    
+
 # 🔹 دالة رئيسية لتشغيل الدالتين معًا
 async def fetch_concurrently():
     # asyncio.gather بتشغل الدالتين في نفس الوقت (concurrently)

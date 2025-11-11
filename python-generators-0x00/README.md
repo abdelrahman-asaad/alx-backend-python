@@ -11,7 +11,7 @@ user_id(Primary Key, UUID, Indexed)
 name (VARCHAR, NOT NULL)
 email (VARCHAR, NOT NULL)
 age (DECIMAL,NOT NULL)
-Populate the database with the sample data from this user_data.csv
+Populate the database with the sample data from this #user_data.csv
 Prototypes:
 def connect_db() :- connects to the mysql database server
 def create_database(connection):- creates the database ALX_prodev if it does not exist

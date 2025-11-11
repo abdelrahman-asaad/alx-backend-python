@@ -19,6 +19,23 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('messaging_app.chats.urls')),
+    path('api/', include('chats.urls')),
     path('api-auth/', include('rest_framework.urls')),  # ✅ لتسجيل الدخول في Browsable API
+    #/api-auth/login/
+    #/api-auth/logout/
+
 ]
+
+
+
+'''هذا يضيف واجهات تسجيل الدخول والخروج للـ browsable API الخاص بـ DRF.
+
+أي URL موجود داخل /api-auth/ يسمح لك بـ:
+
+تسجيل الدخول: /api-auth/login/
+
+تسجيل الخروج: /api-auth/logout/
+
+مفيد إذا تستخدم Browsable API أثناء التطوير أو الاختبار.
+
+بدون هذا، لن تتمكن من تسجيل الدخول عبر واجهة المتصفح لاختبار الـ API protected بـ IsAuthenticated.'''
