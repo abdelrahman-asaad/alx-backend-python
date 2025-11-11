@@ -39,17 +39,17 @@ def test_access_nested_map(self, nested_map, path, expected):
 ثالث قيمة → expected'''
 #___________________
 #!/usr/bin/env python3
-"""Unit test for utils.get_json using mocked HTTP calls."""
+"""Unit tests for utils.get_json function with mock and real calls."""
 
 import unittest
 from unittest.mock import patch, Mock
-from utils import get_json  # تأكد المسار صح حسب مكان utils.py
+from utils import get_json
 
 class TestGetJson(unittest.TestCase):
-    """Test case for utils.get_json function."""
+    """Test get_json function."""
 
-    def test_get_json(self):
-        """Test that get_json returns the expected payload using mocked requests.get."""
+    def test_get_json_mocked(self):
+        """Test get_json using mocked requests.get."""
         test_cases = [
             ("http://example.com", {"payload": True}),
             ("http://holberton.io", {"payload": False}),
@@ -57,22 +57,34 @@ class TestGetJson(unittest.TestCase):
 
         for test_url, test_payload in test_cases:
             with patch("utils.requests.get") as mock_get:
-                # تجهيز الـ Mock للـ Response
                 mock_response = Mock()
                 mock_response.json.return_value = test_payload
                 mock_get.return_value = mock_response
 
-                # استدعاء الدالة get_json
                 result = get_json(test_url)
 
-                # التأكد إن requests.get تم استدعائها مرة واحدة بالـ URL الصح
+                # Check that requests.get was called once with test_url
                 mock_get.assert_called_once_with(test_url)
-
-                # التأكد من أن get_json رجعت الـ payload المتوقع
+                # Check that get_json returns the mocked payload
                 self.assertEqual(result, test_payload)
+
+    def test_get_json_real(self):
+        """Test get_json with real URLs."""
+        real_urls = [
+            "https://jsonplaceholder.typicode.com/todos/1",
+            "https://api.github.com"
+        ]
+
+        for url in real_urls:
+            result = get_json(url)
+            # Check that result is a dictionary
+            self.assertIsInstance(result, dict)
+            # Optionally check that it's not empty
+            self.assertTrue(len(result) > 0)
 
 if __name__ == "__main__":
     unittest.main()
+
 
 
 #payload is the data you get back from an API call, usually in JSON format
