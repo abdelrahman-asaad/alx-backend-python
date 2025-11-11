@@ -39,12 +39,11 @@ def test_access_nested_map(self, nested_map, path, expected):
 ثالث قيمة → expected'''
 #___________________
 #!/usr/bin/env python3
-"""Unit tests for utils.get_json using mock HTTP calls."""
+"""Unit test for utils.get_json using mocked HTTP calls."""
 
 import unittest
 from unittest.mock import patch, Mock
-from utils import get_json
-
+from utils import get_json  # تأكد المسار صح حسب مكان utils.py
 
 class TestGetJson(unittest.TestCase):
     """Test case for utils.get_json function."""
@@ -58,17 +57,23 @@ class TestGetJson(unittest.TestCase):
 
         for test_url, test_payload in test_cases:
             with patch("utils.requests.get") as mock_get:
+                # تجهيز الـ Mock للـ Response
                 mock_response = Mock()
                 mock_response.json.return_value = test_payload
                 mock_get.return_value = mock_response
 
+                # استدعاء الدالة get_json
                 result = get_json(test_url)
 
-                # Check that requests.get was called exactly once with the test_url
+                # التأكد إن requests.get تم استدعائها مرة واحدة بالـ URL الصح
                 mock_get.assert_called_once_with(test_url)
 
-                # Check that get_json returns the mocked payload
+                # التأكد من أن get_json رجعت الـ payload المتوقع
                 self.assertEqual(result, test_payload)
+
+if __name__ == "__main__":
+    unittest.main()
+
 
 #payload is the data you get back from an API call, usually in JSON format
 # like {"key": "value"}
