@@ -483,4 +483,13 @@ TEST_PAYLOAD = [
                 "merges_url": "https://api.github.com/repos/google/google.github.io/merges",
                 "archive_url": "https://api.github.com/repos/google/google.github.io/{archive_format}{/ref}",
                 "downloads_url": "https://api.github.com/repos/google/google.github.io/downloads",
-                "issues_url":
+                "issues_url": "https://api.github.com/repos/google/google.github.io/issues{/number}",
+                "pulls_url": "https://api.github.com/repos/google/google.github.io/pulls{/number}",
+                "milestones_url": "https://api.github.com/repos/google/google.github.io/milestones{/number}",
+                "notifications_url": "https://api.github.com/repos/google/google.github.io/notifications{   ?since,all,participating}",
+                "labels_url": "https://api.github.com/repos/google/google.github.io/labels{/name}",
+                "releases_url": "https://api.github.com/repos/google/google.github.io/releases{/id}",
+                "deployments_url": "https://api.github.com/repos/google/google.github.io/deployments",
+                "created_at": "2013-02-20T21:01:149Z",
+                "updated_at": "2019-10-16T16:21:28Z",
+                "pushed_at": "2019-10-16T16:21:26Z", } ])]

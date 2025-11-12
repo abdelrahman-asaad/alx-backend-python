@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
+"""
+Test module for GithubOrgClient
+"""
+
 import unittest
-from unittest.mock import patch
-from parameterized import parameterized
+from unittest.mock import patch, PropertyMock
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
+# ===== TASK 4 =====
 class TestGithubOrgClient(unittest.TestCase):
-    """Test cases for GithubOrgClient.org method"""
+    """Test cases for GithubOrgClient - Task 4"""
 
     @parameterized.expand([
         ("google",),
@@ -15,22 +21,36 @@ class TestGithubOrgClient(unittest.TestCase):
     @patch('client.get_json')
     def test_org(self, org_name, mock_get_json):
         """Test that GithubOrgClient.org returns the correct value"""
-        # Arrange: نحضر بيانات تجريبية وهمية ترجعها get_json
-        expected_payload = {"org_name": org_name}
-        mock_get_json.return_value = expected_payload
+        test_payload = {"payload": True}
+        mock_get_json.return_value = test_payload
 
-        # Act: نعمل instance من GithubOrgClient وننادي org
         client = GithubOrgClient(org_name)
         result = client.org
 
-        # Assert: نتحقق إن الدالة get_json اتندت مرة واحدة بالـ URL الصح
-        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
-        # ونتأكد إن النتيجة هي نفس الـ payload اللي حطيناه
-        self.assertEqual(result, expected_payload)
+        expected_url = f"https://api.github.com/orgs/{org_name}"
+        mock_get_json.assert_called_once_with(expected_url)
+        self.assertEqual(result, test_payload)
 
 
-if __name__ == "__main__":
-    unittest.main()
+# ===== TASK 5 =====
+class TestGithubOrgClientPublicReposUrl(unittest.TestCase):
+    """Test cases for GithubOrgClient._public_repos_url - Task 5"""
+
+    @patch('client.GithubOrgClient.org', new_callable=PropertyMock)
+    def test_public_repos_url(self, mock_org):
+        """Test GithubOrgClient._public_repos_url"""
+        test_payload = {"repos_url": "https://api.github.com/orgs/test/repos"}
+        mock_org.return_value = test_payload
+
+        client = GithubOrgClient("test")
+        result = client._public_repos_url
+
+        self.assertEqual(result, test_payload["repos_url"])
+
+
+# ===== TASK 6 =====
+class TestGithubOrgClientPublicRepos(unittest.TestCase):
+    """Test cases for GithubOrgClient.public_repos - Task 6"""
 
     @patch('client.get_json')
     def test_public_repos(self, mock_get_json):
@@ -55,6 +75,11 @@ if __name__ == "__main__":
             mock_url.assert_called_once()
             mock_get_json.assert_called_once()
 
+
+# ===== TASK 7 =====
+class TestGithubOrgClientHasLicense(unittest.TestCase):
+    """Test cases for GithubOrgClient.has_license - Task 7"""
+
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False),
@@ -65,6 +90,7 @@ if __name__ == "__main__":
         self.assertEqual(result, expected)
 
 
+# ===== TASK 8 =====
 @parameterized_class([
     {
         'org_payload': TEST_PAYLOAD[0][0],
@@ -74,7 +100,7 @@ if __name__ == "__main__":
     },
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
-    """Integration tests for GithubOrgClient"""
+    """Integration tests for GithubOrgClient - Task 8"""
 
     @classmethod
     def setUpClass(cls):
