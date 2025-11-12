@@ -187,15 +187,15 @@ print(say_hi.__doc__)   # ❌ يطبع "This is the wrapper docstring"
 
 #مع @wraps
 
-from functools import wraps
+#from functools import wraps
 
-def my_decorator(fn):
-    @wraps(fn)  # <-- هنا بنحافظ على الاسم والـ docstring
-    def wrapper():
-        print("قبل التنفيذ")
-        fn()
-        print("بعد التنفيذ")
-    return wrapper
+#def my_decorator(fn):
+#    @wraps(fn)  # <-- هنا بنحافظ على الاسم والـ docstring
+#    def wrapper():
+#        print("قبل التنفيذ")
+#        fn()
+#        print("بعد التنفيذ")
+#    return wrapper
 
 
 @my_decorator  # <-- دي الصح

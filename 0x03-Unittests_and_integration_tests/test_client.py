@@ -1,53 +1,37 @@
 #!/usr/bin/env python3
-"""Module for testing the GithubOrgClient class methods.
 """
+Test module for GithubOrgClient
+"""
+
 import unittest
-from unittest.mock import patch
-from parameterized import parameterized
+from unittest.mock import patch, PropertyMock
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
+# ===== TASK 4 =====
 class TestGithubOrgClient(unittest.TestCase):
-    """Tests the GithubOrgClient class."""
+    """Test cases for GithubOrgClient - Task 4"""
 
     @parameterized.expand([
-        ("google", {"login": "google"}),
-        ("abc", {"login": "abc"}),
+        ("google",),
+        ("abc",),
     ])
     @patch('client.get_json')
-    def test_org(self, org_name, expected_result, mock_get_json):
-        """
-        Tests that GithubOrgClient.org returns the correct value,
-        and that utils.get_json is called once with the expected URL.
-        """
-        # Configure the mock object to return the expected dictionary
-        # The mock is the patched client.get_json
-        mock_get_json.return_value = expected_result
+    def test_org(self, org_name, mock_get_json):
+        """Test that GithubOrgClient.org returns the correct value"""
+        test_payload = {"payload": True}
+        mock_get_json.return_value = test_payload
 
-        # Create an instance of GithubOrgClient
         client = GithubOrgClient(org_name)
-
-        # Call the method under test
         result = client.org
 
-        # Assert that the result matches the expected organization dictionary
-        self.assertEqual(result, expected_result)
-
-        # Construct the expected URL that get_json should have been called with
         expected_url = f"https://api.github.com/orgs/{org_name}"
-
-        # Assert that get_json was called exactly once with the expected URL
         mock_get_json.assert_called_once_with(expected_url)
-
-        # Note on mock_get_json: Since we are using @patch as a decorator
-        # and providing a return_value, we ensure that the actual get_json
-        # (which might perform an HTTP call) is never executed, fulfilling
-        # the "no external HTTP calls should be made" requirement.
+        self.assertEqual(result, test_payload)
 
 
-if __name__ == '__main__':
-    unittest.main()
-    
 # ===== TASK 5 =====
 class TestGithubOrgClientPublicReposUrl(unittest.TestCase):
     """Test cases for GithubOrgClient._public_repos_url - Task 5"""
@@ -161,3 +145,4 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    
