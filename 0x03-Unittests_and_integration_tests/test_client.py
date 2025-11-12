@@ -49,7 +49,6 @@ class TestGithubOrgClientPublicReposUrl(unittest.TestCase):
 
 
 # ===== TASK 6 =====
-#!/usr/bin/env python3
 """
 Test module for GithubOrgClient - Task 6
 """
