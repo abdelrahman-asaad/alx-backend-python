@@ -83,7 +83,7 @@ class TestGithubOrgClient7(unittest.TestCase):
     ])
     def test_has_license(self, repo, license_key, expected):
         """Test GithubOrgClient.has_license"""
-        result = GithubOrgClient.has_license(repo, license_key)
+        result = TestGithubOrgClient7.has_license(repo, license_key)
         self.assertEqual(result, expected)
 
 
