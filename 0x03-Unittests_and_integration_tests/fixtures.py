@@ -2,15 +2,21 @@
 
 TEST_PAYLOAD = [
     (
-        {"repos_url": "https://api.github.com/orgs/google/repos"},
+        {
+            "login": "google",
+            "id": 1,
+            "repos_url": "https://api.github.com/orgs/google/repos",
+        },
         [
-            {"id": 7697149, "name": "episodes.dart", "license": {"key": "apache-2.0"}},
-            {"id": 12345, "name": "my-lib", "license": {"key": "mit"}},
+            {"name": "repo1", "license": {"key": "apache-2.0"}},
+            {"name": "repo2", "license": {"key": "mit"}},
+            {"name": "repo3"},
         ],
-        ["episodes.dart", "my-lib"],  # expected_repos
-        ["episodes.dart"],            # apache2_repos
-    ),
+        ["repo1", "repo2", "repo3"],
+        ["repo1"],  # ← دي لازم تكون موجودة
+    )
 ]
+
 
 
 TES1T_PAYLOAD = [
