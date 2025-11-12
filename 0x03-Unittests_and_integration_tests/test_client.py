@@ -55,23 +55,42 @@ Test module for GithubOrgClient - Task 6
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """Test GithubOrgClient"""
+    """Test cases for GithubOrgClient - Task 6"""
 
-    @patch('client.get_json')
-    def test_public_repos(self, mock_get):
-        """Test public_repos method"""
-        mock_get.return_value = [{"name": "repo1"}, {"name": "repo2"}]
+    def test_public_repos(self):
+        """Test GithubOrgClient.public_repos"""
+        # Mock payload for repos_payload
+        test_payload = [
+            {"name": "repo1"},
+            {"name": "repo2"},
+        ]
 
-        test_url = "https://example.com/repos"
-        with patch.object(GithubOrgClient, '_public_repos_url',
-                          new_callable=PropertyMock,
-                          return_value=test_url) as mock_url:
-            client = GithubOrgClient("test")
-            result = client.public_repos()
-            self.assertEqual(result, ["repo1", "repo2"])
-            mock_get.assert_called_once()
-            mock_url.assert_called_once()
-
+        # Mock the _public_repos_url property and repos_payload property
+        with patch.object(
+            GithubOrgClient,
+            '_public_repos_url',
+            new_callable=PropertyMock,
+            return_value="https://api.github.com/orgs/test/repos"
+        ) as mock_url:
+            with patch.object(
+                GithubOrgClient,
+                'repos_payload',
+                new_callable=PropertyMock,
+                return_value=test_payload
+            ) as mock_repos:
+                # Create client instance
+                client = GithubOrgClient("test")
+                
+                # Call the method being tested
+                result = client.public_repos()
+                
+                # Verify the result
+                expected_repos = ["repo1", "repo2"]
+                self.assertEqual(result, expected_repos)
+                
+                # Verify the mocked properties were called
+                mock_url.assert_called_once()
+                mock_repos.assert_called_once()
 
 # ===== TASK 7 =====
 class TestGithubOrgClient(unittest.TestCase):
