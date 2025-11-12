@@ -165,6 +165,10 @@ assertEqual(result, {"payload": True}) → ينجح
 نفس الشيء مع "http://holberton.io" و{"payload": False}'''
 #________________________________
 #!/usr/bin/env python3
+"""
+Unit test for memoize decorator.
+"""
+
 import unittest
 from unittest.mock import patch
 from utils import memoize
@@ -175,12 +179,11 @@ class TestMemoize(unittest.TestCase):
 
     def test_memoize(self):
         """Test that memoize caches the result of a_method."""
-
         class TestClass:
             """Inner class to test memoization."""
 
             def a_method(self):
-                """Method to be mocked."""
+                """Simple method that returns 42."""
                 return 42
 
             @memoize
@@ -188,21 +191,15 @@ class TestMemoize(unittest.TestCase):
                 """Method decorated with memoize."""
                 return self.a_method()
 
-        # نعمل instance من الكلاس
         obj = TestClass()
 
-        # نعمل mock لـ a_method
         with patch.object(TestClass, "a_method", return_value=42) as mock_method:
-            # أول مرة → المفروض يستدعي a_method
             result1 = obj.a_property
-            # تاني مرة → المفروض يجيب من الكاش، مش يستدعي a_method
             result2 = obj.a_property
 
-            # تأكد إن النتيجة نفس القيمة
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
 
-            # تأكد إن a_method اتنادت مرة واحدة بس
             mock_method.assert_called_once()
 
 
