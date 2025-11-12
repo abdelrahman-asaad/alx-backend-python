@@ -153,14 +153,14 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         'apache2_repos': TEST_PAYLOAD[0][3],
     },
 ])
-    class TestIntegrationGithubOrgClient(unittest.TestCase):
-        """Integration tests for GithubOrgClient"""
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration tests for GithubOrgClient"""
 
-        @classmethod
-        def setUpClass(cls):
-            """Set up class for integration tests"""
-            cls.get_patcher = patch('requests.get')
-            cls.mock_get = cls.get_patcher.start()
+    @classmethod
+    def setUpClass(cls):
+        """Set up class for integration tests"""
+        cls.get_patcher = patch('requests.get')
+        cls.mock_get = cls.get_patcher.start()
 
         def side_effect(url):
             """Side effect for requests.get mock"""
