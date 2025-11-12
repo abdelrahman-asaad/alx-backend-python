@@ -54,7 +54,7 @@ Test module for GithubOrgClient - Task 6
 """
 class TestGithubOrgClient(unittest.TestCase):
 
-    
+
     """Test GithubOrgClient"""
 
     @patch('client.get_json')
@@ -70,6 +70,7 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(result, ["repo1", "repo2"])
             mock_get.assert_called_once()
             mock_url.assert_called_once()
+
 # ===== TASK 7 =====
 class TestGithubOrgClientHasLicense(unittest.TestCase):
     """Test cases for GithubOrgClient.has_license - Task 7"""
