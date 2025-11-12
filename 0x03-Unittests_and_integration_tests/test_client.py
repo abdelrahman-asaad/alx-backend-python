@@ -53,33 +53,42 @@ class TestGithubOrgClientPublicReposUrl(unittest.TestCase):
 Test module for GithubOrgClient - Task 6
 """
 
-
-#!/usr/bin/env python3
-"""Test GithubOrgClient - Task 6"""
-import unittest
-from unittest.mock import patch, PropertyMock
-from client import GithubOrgClient
-
-
 class TestGithubOrgClient(unittest.TestCase):
-    """Test GithubOrgClient"""
+    """Test cases for GithubOrgClient - Task 6"""
 
-    def test_public_repos(self):
-        """Test public_repos method"""
-        test_data = [{"name": "repo1"}, {"name": "repo2"}]
-        
-        with patch.object(GithubOrgClient, 'repos_payload',
-                         new_callable=PropertyMock,
-                         return_value=test_data) as mock_repos:
+    @patch('client.get_json')
+    def test_public_repos(self, mock_get_json):
+        """Test GithubOrgClient.public_repos"""
+        # Mock payload for get_json
+        test_payload = [
+            {"name": "repo1"},
+            {"name": "repo2"},
+        ]
+        mock_get_json.return_value = test_payload
+
+        # Mock the _public_repos_url property
+        with patch.object(
+            GithubOrgClient,
+            '_public_repos_url',
+            new_callable=PropertyMock,
+            return_value="https://api.github.com/orgs/test/repos"
+        ) as mock_prop:
+            # Create client instance
             client = GithubOrgClient("test")
+            
+            # Call the method being tested
             result = client.public_repos()
             
-            self.assertEqual(result, ["repo1", "repo2"])
-            mock_repos.assert_called_once()
+            # Verify the list of repos is correct
+            expected_repos = ["repo1", "repo2"]
+            self.assertEqual(result, expected_repos)
+            
+            # Verify the mocked property was called once
+            mock_prop.assert_called_once()
+            
+            # Verify get_json was called once
+            mock_get_json.assert_called_once()
 
-
-if __name__ == '__main__':
-    unittest.main()
 
 # ===== TASK 7 =====
 class TestGithubOrgClient(unittest.TestCase):
