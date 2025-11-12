@@ -61,16 +61,6 @@ class TestGetJson(unittest.TestCase):
             self.assertEqual(result, test_payload)
 
 
-#!/usr/bin/env python3
-"""
-Test module for utils functions
-"""
-
-import unittest
-from unittest.mock import patch
-from utils import memoize
-
-
 class TestMemoize(unittest.TestCase):
     """Test cases for memoize decorator"""
 
@@ -90,13 +80,11 @@ class TestMemoize(unittest.TestCase):
         test_instance = TestClass()
 
         # Mock the a_method using patch
-        with patch.object(TestClass, 'a_method',
-                          return_value=42) as mock_method:
-            # First call to a_property
-            result1 = test_instance.a_property()
-
-            # Second call to a_property
-            result2 = test_instance.a_property()
+        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
+            # First call to a_property (as attribute, no parentheses)
+            result1 = test_instance.a_property
+            # Second call to a_property (as attribute, no parentheses)
+            result2 = test_instance.a_property
 
             # Test that the correct result is returned both times
             self.assertEqual(result1, 42)
