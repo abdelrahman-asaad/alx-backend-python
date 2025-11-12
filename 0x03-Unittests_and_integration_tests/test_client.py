@@ -54,7 +54,6 @@ Test module for GithubOrgClient - Task 6
 """
 class TestGithubOrgClient(unittest.TestCase):
     """Test GithubOrgClient"""
-    
 
     @patch('client.get_json')
     def test_public_repos(self, mock_get):
@@ -75,7 +74,6 @@ class TestGithubOrgClient(unittest.TestCase):
 # ===== TASK 7 =====
 class TestGithubOrgClientHasLicense(unittest.TestCase):
     """Test cases for GithubOrgClient.has_license - Task 7"""
-
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
