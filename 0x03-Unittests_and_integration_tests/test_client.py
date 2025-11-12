@@ -9,18 +9,6 @@ from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 
-
-c#!/usr/bin/env python3
-"""
-Test module for GithubOrgClient
-"""
-
-import unittest
-from unittest.mock import patch
-from parameterized import parameterized
-from client import GithubOrgClient
-
-
 class TestGithubOrgClient(unittest.TestCase):
     """Test cases for GithubOrgClient"""
 
@@ -49,7 +37,8 @@ class TestGithubOrgClient(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
+
+
     @patch('client.get_json')
     def test_public_repos(self, mock_get_json):
         """Test GithubOrgClient.public_repos"""
