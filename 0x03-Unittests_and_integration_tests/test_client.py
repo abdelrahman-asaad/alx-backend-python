@@ -62,9 +62,8 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test GithubOrgClient.public_repos"""
         # Mock payload for get_json
         test_payload = [
-            {"name": "repo1", "license": {"key": "mit"}},
-            {"name": "repo2", "license": {"key": "apache-2.0"}},
-            {"name": "repo3", "license": None},
+            {"name": "repo1"},
+            {"name": "repo2"},
         ]
         mock_get_json.return_value = test_payload
 
@@ -74,21 +73,18 @@ class TestGithubOrgClient(unittest.TestCase):
             '_public_repos_url',
             new_callable=PropertyMock,
             return_value="https://api.github.com/orgs/test/repos"
-        ) as mock_public_repos_url:
+        ) as mock_url:
             # Create client and call public_repos
             client = GithubOrgClient("test")
             result = client.public_repos()
 
             # Verify the list of repos is correct
-            expected_repos = ["repo1", "repo2", "repo3"]
+            expected_repos = ["repo1", "repo2"]
             self.assertEqual(result, expected_repos)
 
-            # Verify mocked property was called once
-            mock_public_repos_url.assert_called_once()
-
-            # Verify get_json was called once
+            # Verify both mocks were called once
             mock_get_json.assert_called_once()
-
+            mock_url.assert_called_once()
 
 # ===== TASK 7 =====
 class TestGithubOrgClient(unittest.TestCase):
