@@ -75,7 +75,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
 # ===== TASK 7 =====
 class TestGithubOrgClient(unittest.TestCase):
-    """Test cases for GithubOrgClient - Task 7"""
+    """Test cases for GithubOrgClient.has_license - Task 7"""
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
@@ -85,6 +85,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test GithubOrgClient.has_license"""
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected)
+
 
 # ===== TASK 8 =====
 @parameterized_class([
@@ -96,7 +97,7 @@ class TestGithubOrgClient(unittest.TestCase):
     },
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
-    """Integration tests for GithubOrgClient"""
+    """Integration tests for GithubOrgClient - Task 8"""
 
     @classmethod
     def setUpClass(cls):
@@ -139,7 +140,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(repos, self.apache2_repos)
 
 
-#_______________________task 9 ___________
+#_______________________
 @parameterized_class([
     {
         'org_payload': TEST_PAYLOAD[0][0],
