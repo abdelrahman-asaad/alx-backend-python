@@ -53,8 +53,6 @@ class TestGithubOrgClientPublicReposUrl(unittest.TestCase):
 Test module for GithubOrgClient - Task 6
 """
 class TestGithubOrgClient(unittest.TestCase):
-
-
     """Test GithubOrgClient"""
 
     @patch('client.get_json')
@@ -63,17 +61,19 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get.return_value = [{"name": "repo1"}, {"name": "repo2"}]
 
         with patch.object(GithubOrgClient, '_public_repos_url',
-                         new_callable=PropertyMock,
-                         return_value="https://example.com/repos") as mock_url:
+                          new_callable=PropertyMock,
+                          return_value="https://example.com/repos") as mock_url:
             client = GithubOrgClient("test")
             result = client.public_repos()
             self.assertEqual(result, ["repo1", "repo2"])
             mock_get.assert_called_once()
             mock_url.assert_called_once()
 
+
 # ===== TASK 7 =====
 class TestGithubOrgClientHasLicense(unittest.TestCase):
     """Test cases for GithubOrgClient.has_license - Task 7"""
+
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
