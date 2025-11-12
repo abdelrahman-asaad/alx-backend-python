@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 """
-Test module for GithubOrgClient
+Test module for GithubOrgClient - Task 4
 """
 
 import unittest
-from unittest.mock import patch, PropertyMock
-from parameterized import parameterized, parameterized_class
+from unittest.mock import patch
+from parameterized import parameterized
 from client import GithubOrgClient
-from fixtures import TEST_PAYLOAD
 
 
-# ===== TASK 4 =====
 class TestGithubOrgClient(unittest.TestCase):
     """Test cases for GithubOrgClient - Task 4"""
 
@@ -31,6 +29,9 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(expected_url)
         self.assertEqual(result, test_payload)
 
+
+if __name__ == '__main__':
+    unittest.main()
 
 # ===== TASK 5 =====
 class TestGithubOrgClientPublicReposUrl(unittest.TestCase):
