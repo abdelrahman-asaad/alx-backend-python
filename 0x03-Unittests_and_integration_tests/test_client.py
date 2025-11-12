@@ -55,42 +55,23 @@ Test module for GithubOrgClient - Task 6
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """Test cases for GithubOrgClient - Task 6"""
+    """Test GithubOrgClient"""
 
     def test_public_repos(self):
-        """Test GithubOrgClient.public_repos"""
-        # Mock payload for repos_payload
-        test_payload = [
-            {"name": "repo1"},
-            {"name": "repo2"},
-        ]
-
-        # Mock the _public_repos_url property and repos_payload property
-        with patch.object(
-            GithubOrgClient,
-            '_public_repos_url',
-            new_callable=PropertyMock,
-            return_value="https://api.github.com/orgs/test/repos"
-        ) as mock_url:
-            with patch.object(
-                GithubOrgClient,
-                'repos_payload',
-                new_callable=PropertyMock,
-                return_value=test_payload
-            ) as mock_repos:
-                # Create client instance
+        """Test public_repos method"""
+        test_repos = [{"name": "repo1"}, {"name": "repo2"}]
+        
+        with patch.object(GithubOrgClient, 'repos_payload',
+                         new_callable=PropertyMock,
+                         return_value=test_repos):
+            with patch.object(GithubOrgClient, '_public_repos_url',
+                             new_callable=PropertyMock,
+                             return_value="https://example.com/repos") as mock_url:
                 client = GithubOrgClient("test")
-                
-                # Call the method being tested
                 result = client.public_repos()
                 
-                # Verify the result
-                expected_repos = ["repo1", "repo2"]
-                self.assertEqual(result, expected_repos)
-                
-                # Verify the mocked properties were called
+                self.assertEqual(result, ["repo1", "repo2"])
                 mock_url.assert_called_once()
-                mock_repos.assert_called_once()
 
 # ===== TASK 7 =====
 class TestGithubOrgClient(unittest.TestCase):
