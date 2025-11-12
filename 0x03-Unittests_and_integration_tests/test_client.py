@@ -142,7 +142,11 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         repos = client.public_repos(license="apache-2.0")
         self.assertEqual(repos, self.apache2_repos)
 
+
+
 @parameterized_class([
+
+
     {
         'org_payload': TEST_PAYLOAD[0][0],
         'repos_payload': TEST_PAYLOAD[0][1],
@@ -189,6 +193,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     def test_public_repos_with_license(self):
         """Test public_repos with license integration"""
+        
+        
         client = GithubOrgClient("google")
         repos = client.public_repos(license="apache-2.0")
         self.assertEqual(repos, self.apache2_repos)
