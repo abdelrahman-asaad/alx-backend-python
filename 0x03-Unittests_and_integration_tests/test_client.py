@@ -143,9 +143,19 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(repos, self.apache2_repos)
 
 # ===== TASK 9 =====
-    @parameterized_class([
+  #!/usr/bin/env python3
+"""
+Integration test for GithubOrgClient
+"""
+
+import unittest
+from unittest.mock import patch
+from parameterized import parameterized_class
+from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
+@parameterized_class([
     {
         'org_payload': TEST_PAYLOAD[0][0],
         'repos_payload': TEST_PAYLOAD[0][1],
@@ -192,11 +202,10 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     def test_public_repos_with_license(self):
         """Test public_repos with license integration"""
-        
-        
         client = GithubOrgClient("google")
         repos = client.public_repos(license="apache-2.0")
         self.assertEqual(repos, self.apache2_repos)
+
 
 if __name__ == '__main__':
     unittest.main()
