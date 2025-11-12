@@ -54,24 +54,32 @@ Test module for GithubOrgClient - Task 6
 """
 
 
+#!/usr/bin/env python3
+"""Test GithubOrgClient - Task 6"""
+import unittest
+from unittest.mock import patch, PropertyMock
+from client import GithubOrgClient
+
+
 class TestGithubOrgClient(unittest.TestCase):
     """Test GithubOrgClient"""
 
     def test_public_repos(self):
         """Test public_repos method"""
-        test_repos = [{"name": "repo1"}, {"name": "repo2"}]
+        test_data = [{"name": "repo1"}, {"name": "repo2"}]
         
         with patch.object(GithubOrgClient, 'repos_payload',
                          new_callable=PropertyMock,
-                         return_value=test_repos):
-            with patch.object(GithubOrgClient, '_public_repos_url',
-                             new_callable=PropertyMock,
-                             return_value="https://example.com/repos") as mock_url:
-                client = GithubOrgClient("test")
-                result = client.public_repos()
-                
-                self.assertEqual(result, ["repo1", "repo2"])
-                mock_url.assert_called_once()
+                         return_value=test_data) as mock_repos:
+            client = GithubOrgClient("test")
+            result = client.public_repos()
+            
+            self.assertEqual(result, ["repo1", "repo2"])
+            mock_repos.assert_called_once()
+
+
+if __name__ == '__main__':
+    unittest.main()
 
 # ===== TASK 7 =====
 class TestGithubOrgClient(unittest.TestCase):
