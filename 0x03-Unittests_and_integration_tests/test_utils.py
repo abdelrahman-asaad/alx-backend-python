@@ -57,9 +57,9 @@ class TestGetJson(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
+
 #_____________________    
-#!/usr/bin/env python3
+'''#!/usr/bin/env python3
 import unittest
 from parameterized import parameterized
 from utils import access_nested_map  # دالة المفروض موجودة في utils.py
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     unittest.main()        
 
 #@parameterized.expand is a decorator that allows you to run a test_method multiple times with different
-# sets of parameters.
+# sets of parameters.'''
 
 '''@parameterized.expand([
     ({"a": 1}, ("a",), 1),
