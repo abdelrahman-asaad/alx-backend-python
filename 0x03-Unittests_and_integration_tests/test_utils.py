@@ -166,7 +166,7 @@ assertEqual(result, {"payload": True}) → ينجح
 #________________________________
 #!/usr/bin/env python3
 """
-Unit test for memoize decorator.
+Test module for memoize decorator
 """
 
 import unittest
@@ -179,11 +179,12 @@ class TestMemoize(unittest.TestCase):
 
     def test_memoize(self):
         """Test that memoize caches the result of a_method."""
+
         class TestClass:
             """Inner class to test memoization."""
 
             def a_method(self):
-                """Simple method that returns 42."""
+                """Method to be mocked."""
                 return 42
 
             @memoize
@@ -191,17 +192,24 @@ class TestMemoize(unittest.TestCase):
                 """Method decorated with memoize."""
                 return self.a_method()
 
+        # Create instance of the class
         obj = TestClass()
 
+        # Mock a_method
         with patch.object(TestClass, "a_method", return_value=42) as mock_method:
+            # First call → should call a_method
             result1 = obj.a_property
+            # Second call → should get from cache, not call a_method
             result2 = obj.a_property
 
+            # Verify the result is the same value
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
 
+            # Verify a_method was called only once
             mock_method.assert_called_once()
 
 
 if __name__ == "__main__":
     unittest.main()
+    
