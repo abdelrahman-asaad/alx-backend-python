@@ -74,7 +74,7 @@ class TestGithubOrgClient6(unittest.TestCase):
 
 
 # ===== TASK 7 =====
-class TestGithubOrgClient(unittest.TestCase):
+class TestGithubOrgClient7(unittest.TestCase):
     """Test cases for GithubOrgClient.has_license - Task 7"""
 
     @parameterized.expand([
