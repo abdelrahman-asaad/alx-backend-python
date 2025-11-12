@@ -54,6 +54,7 @@ Test module for GithubOrgClient - Task 6
 """
 class TestGithubOrgClient(unittest.TestCase):
     """Test GithubOrgClient"""
+    
 
     @patch('client.get_json')
     def test_public_repos(self, mock_get):
