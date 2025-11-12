@@ -61,6 +61,16 @@ class TestGetJson(unittest.TestCase):
             self.assertEqual(result, test_payload)
 
 
+#!/usr/bin/env python3
+"""
+Test module for utils functions
+"""
+
+import unittest
+from unittest.mock import patch
+from utils import memoize
+
+
 class TestMemoize(unittest.TestCase):
     """Test cases for memoize decorator"""
 
