@@ -165,50 +165,33 @@ assertEqual(result, {"payload": True}) → ينجح
 نفس الشيء مع "http://holberton.io" و{"payload": False}'''
 #________________________________
 #!/usr/bin/env python3
-"""
-Test module for memoize decorator
-"""
-
+"""Test memoize decorator"""
 import unittest
 from unittest.mock import patch
 from utils import memoize
 
 
 class TestMemoize(unittest.TestCase):
-    """Test case for the memoize decorator."""
+    """Test memoize decorator"""
 
     def test_memoize(self):
-        """Test that memoize caches the result of a_method."""
-
+        """Test memoize caches result"""
         class TestClass:
-            """Inner class to test memoization."""
-
             def a_method(self):
-                """Method to be mocked."""
                 return 42
 
             @memoize
             def a_property(self):
-                """Method decorated with memoize."""
                 return self.a_method()
 
-        # Create instance of the class
         obj = TestClass()
-
-        # Mock a_method
-        with patch.object(TestClass, "a_method", return_value=42) as mock_method:
-            # First call → should call a_method
+        with patch.object(TestClass, 'a_method', return_value=42) as mock:
             result1 = obj.a_property
-            # Second call → should get from cache, not call a_method
             result2 = obj.a_property
-
-            # Verify the result is the same value
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
-
-            # Verify a_method was called only once
-            mock_method.assert_called_once()
+            mock.assert_called_once()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
