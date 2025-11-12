@@ -54,7 +54,7 @@ Test module for GithubOrgClient - Task 6
 """
 
 
-class TestGithubOrgClient(unittest.TestCase):
+class TestGithubOrgClient6(unittest.TestCase):
     """Test GithubOrgClient"""
 
     @patch('client.get_json')
