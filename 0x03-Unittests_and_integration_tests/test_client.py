@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""
-Test module for GithubOrgClient
-"""
-
+"""Test GithubOrgClient.org method"""
 import unittest
 from unittest.mock import patch
 from parameterized import parameterized
@@ -10,29 +7,22 @@ from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """Test cases for GithubOrgClient"""
+    """Test GithubOrgClient"""
 
-    @parameterized.expand([
-        ("google", {"login": "google"}),
-        ("abc", {"login": "abc"}),
-    ])
+    @parameterized.expand([("google",), ("abc",)])
     @patch('client.get_json')
-    def test_org(self, org_name, expected, mock_get_json):
-        """Test GithubOrgClient.org returns correct value"""
-        mock_get_json.return_value = expected
+    def test_org(self, org, mock_get):
+        """Test org method"""
+        test = {"org": org}
+        mock_get.return_value = test
 
-        client = GithubOrgClient(org_name)
-        result = client.org
-
-        expected_url = f"https://api.github.com/orgs/{org_name}"
-        mock_get_json.assert_called_once_with(expected_url)
-        self.assertEqual(result, expected)
+        client = GithubOrgClient(org)
+        self.assertEqual(client.org, test)
+        mock_get.assert_called_once_with(f"https://api.github.com/orgs/{org}")
 
 
 if __name__ == '__main__':
     unittest.main()
-
-    
     @patch('client.get_json')
     def test_public_repos(self, mock_get_json):
         """Test GithubOrgClient.public_repos"""
