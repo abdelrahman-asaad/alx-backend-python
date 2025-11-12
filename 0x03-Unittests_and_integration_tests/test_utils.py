@@ -17,6 +17,9 @@ class TestAccessNestedMap(unittest.TestCase):
         """Test that access_nested_map returns the expected result."""
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
+if __name__ == "__main__":
+    unittest.main()        
+
 #@parameterized.expand is a decorator that allows you to run a test_method multiple times with different
 # sets of parameters.
 
@@ -60,11 +63,11 @@ class TestGetJson(unittest.TestCase):
         """
         Test that get_json returns the expected result and makes the correct HTTP call
         """
-        # Create a mock response object
+        # Create a mock response object not to perform real HTTP requests
         mock_response = Mock()
         mock_response.json.return_value = test_payload
 
-        # Patch requests.get to return our mock response
+        # Patch requests.get to return our mock response >> to replace the real requests.get with a mock
         with patch('utils.requests.get', return_value=mock_response) as mock_get:
             # Call the function
             result = get_json(test_url)
@@ -78,4 +81,24 @@ class TestGetJson(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
+
+   #______________________
+    '''أمثلة تنفيذية (ماذا يحدث فعلاً لكل تكرار)
+
+تكرار 1:
+
+test_url = "http://example.com"
+
+test_payload = {"payload": True}
+
+patch يجعل requests.get("http://example.com") يرجع mock_response
+
+get_json يرجع {"payload": True}
+
+نتحقق mock_get.assert_called_once_with("http://example.com")
+
+assertEqual(result, {"payload": True}) → ينجح
+
+تكرار 2:
+
+نفس الشيء مع "http://holberton.io" و{"payload": False}'''
