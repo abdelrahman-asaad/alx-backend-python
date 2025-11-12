@@ -74,8 +74,8 @@ class TestGithubOrgClient(unittest.TestCase):
 
 
 # ===== TASK 7 =====
-class TestGithubOrgClientHasLicense(unittest.TestCase):
-    """Test cases for GithubOrgClient.has_license - Task 7"""
+class TestGithubOrgClient(unittest.TestCase):
+    """Test cases for GithubOrgClient - Task 7"""
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
@@ -85,7 +85,6 @@ class TestGithubOrgClientHasLicense(unittest.TestCase):
         """Test GithubOrgClient.has_license"""
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected)
-
 
 # ===== TASK 8 =====
 @parameterized_class([
