@@ -4,10 +4,10 @@ Test module for GithubOrgClient
 """
 
 import unittest
-from unittest.mock import patch, PropertyMock
-from parameterized import parameterized, parameterized_class
+from unittest.mock import patch
+from parameterized import parameterized
 from client import GithubOrgClient
-from fixtures import TEST_PAYLOAD
+
 
 class TestGithubOrgClient(unittest.TestCase):
     """Test cases for GithubOrgClient"""
@@ -19,11 +19,11 @@ class TestGithubOrgClient(unittest.TestCase):
     @patch('client.get_json')
     def test_org(self, org_name, mock_get_json):
         """Test that GithubOrgClient.org returns the correct value"""
-        # Set up the mock return value
+        # Set up test payload
         test_payload = {"login": org_name, "id": 12345}
         mock_get_json.return_value = test_payload
 
-        # Create client instance and call org property
+        # Create client and access org property
         client = GithubOrgClient(org_name)
         result = client.org
 
@@ -31,7 +31,7 @@ class TestGithubOrgClient(unittest.TestCase):
         expected_url = f"https://api.github.com/orgs/{org_name}"
         mock_get_json.assert_called_once_with(expected_url)
         
-        # Verify the result matches the mock payload
+        # Verify the result is correct
         self.assertEqual(result, test_payload)
 
 
