@@ -96,7 +96,7 @@ class TestGithubOrgClient(unittest.TestCase):
     },
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
-    """Integration tests for GithubOrgClient - Task 8"""
+    """Integration tests for GithubOrgClient"""
 
     @classmethod
     def setUpClass(cls):
@@ -139,7 +139,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(repos, self.apache2_repos)
 
 
-#_______________________
+#_______________________task 9 ___________
 @parameterized_class([
     {
         'org_payload': TEST_PAYLOAD[0][0],
