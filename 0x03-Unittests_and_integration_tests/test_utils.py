@@ -1,4 +1,40 @@
 #!/usr/bin/env python3
+"""
+Test module for utils.access_nested_map function
+"""
+
+import unittest
+from parameterized import parameterized
+from utils import access_nested_map
+
+
+class TestAccessNestedMap(unittest.TestCase):
+    """Test cases for access_nested_map function"""
+
+    @parameterized.expand([
+        ({}, ("a",)),
+        ({"a": 1}, ("a", "b")),
+    ])
+    def test_access_nested_map_exception(self, nested_map, path):
+        """
+        Test that access_nested_map raises KeyError with expected message
+        for invalid paths
+        """
+        with self.assertRaises(KeyError) as context:
+            access_nested_map(nested_map, path)
+        
+        # Extract the key that caused the KeyError
+        expected_key = path[len(nested_map)] if len(nested_map) < len(path) else path[-1]
+        
+        # Verify the exception message contains the expected key
+        self.assertEqual(str(context.exception), f"'{expected_key}'")
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+#_____________________    
+#!/usr/bin/env python3
 import unittest
 from parameterized import parameterized
 from utils import access_nested_map  # دالة المفروض موجودة في utils.py
