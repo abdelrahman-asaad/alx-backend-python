@@ -62,10 +62,9 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test public_repos method"""
         mock_get.return_value = [{"name": "repo1"}, {"name": "repo2"}]
 
-        test_url = "https://example.com/repos"
         with patch.object(GithubOrgClient, '_public_repos_url',
-                          new_callable=PropertyMock,
-                          return_value=test_url) as mock_url:
+                         new_callable=PropertyMock,
+                         return_value="https://example.com/repos") as mock_url:
             client = GithubOrgClient("test")
             result = client.public_repos()
             self.assertEqual(result, ["repo1", "repo2"])
