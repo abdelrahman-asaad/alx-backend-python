@@ -87,7 +87,8 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 
 # ===== TASK 8 =====
-@parameterized_class([
+@parameterized_class(
+    [
     {
         'org_payload': TEST_PAYLOAD[0][0],
         'repos_payload': TEST_PAYLOAD[0][1],
