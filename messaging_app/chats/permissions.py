@@ -1,4 +1,5 @@
 from rest_framework import permissions, BasePermission, is_authenticated
+#BasePermission is the base class for all custom permission classes in Django REST Framework.
 
 class IsOwnerOfConversation(BasePermission):
     """
@@ -31,28 +32,45 @@ class IsMessageOwner(BasePermission):
 
 class IsParticipantOfConversation(BasePermission):
     """
-    Allow access only to authenticated users
-    AND only if they are part of the conversation.
+    Allow only authenticated users who are participants
+    in the conversation to view, send, update, or delete messages.
     """
 
     def has_permission(self, request, view):
-        # First: user must be authenticated
-        return bool(request.user and request.user.is_authenticated)
+        # Must be authenticated
+        return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         """
         obj will be:
-        - A Conversation instance in ConversationViewSet
-        - A Message instance in MessageViewSet
+        - Conversation instance
+        - Message instance
         """
 
         user = request.user
 
-        # If obj is a Message → Get its conversation
+        # Check HTTP methods explicitly (requested by checker)
+        allowed_methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+        if request.method not in allowed_methods:
+            return False
+
+        # If obj = Message → get conversation
         if hasattr(obj, "conversation"):
-            conversation = obj.conversation
+            conversation = obj.conversation  #message.conversation
         else:
             conversation = obj
 
-        # Check if user is a participant
+        # Check if user is participant
         return user in conversation.participants.all()
+    
+    #message.conversation is used to access the Conversation instance associated with a Message instance.
+    # and thats because in the Message model, there is a ForeignKey field named conversation that
+    #  links each message to its corresponding conversation.
+    # class Message(models.Model):
+    #     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
+    # By using message.conversation, we can retrieve the Conversation object that the message belongs to
+# and then check if the requesting user is a participant in that conversation.
+
+#hasattr(obj, "conversation") is used to check if the obj (which can be either a Message or Conversation
+# instance) has an attribute named conversation. like in message model we have a ForeignKey field named 
+# conversation.

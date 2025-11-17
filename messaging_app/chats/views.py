@@ -5,6 +5,9 @@ from rest_framework.decorators import action
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from .permissions import IsParticipantOfConversation
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 # 1️⃣ Conversation ViewSet
@@ -36,14 +39,25 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
 # 2️⃣ Message ViewSet
 class MessageViewSet(viewsets.ModelViewSet):
-    """
-    إدارة الرسائل:
-    - list: عرض كل الرسائل
-    - create: إرسال رسالة جديدة
-    """
-    queryset = Message.objects.all()  # كل الرسائل
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated, IsParticipantOfConversation]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+
+    def get_queryset(self):
+        conversation_id = self.kwargs.get("conversation_id")
+        return Message.objects.filter(conversation_id=conversation_id)
+
+    def create(self, request, *args, **kwargs):
+        conversation_id = kwargs.get("conversation_id")
+        conversation = Conversation.objects.get(id=conversation_id)
+
+        # Prevent sending messages if user is not a participant
+        if request.user not in conversation.participants.all():
+            return Response(
+                {"detail": "You are not allowed to send messages in this conversation."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         # ربط الرسالة بالمستخدم الحالي عند الإنشاء
