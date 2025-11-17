@@ -8,6 +8,9 @@ from .permissions import IsParticipantOfConversation
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from .pagination import MessagePagination
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import MessageFilter
 
 
 # 1️⃣ Conversation ViewSet
@@ -41,6 +44,9 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+    pagination_class = MessagePagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MessageFilter
 
     def get_queryset(self):
         conversation_id = self.kwargs.get("conversation_id")
