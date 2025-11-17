@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
+from .permissions import IsParticipantOfConversation
 
 
 # 1️⃣ Conversation ViewSet
@@ -16,7 +17,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     """
     queryset = Conversation.objects.all()  # كل المحادثات
     serializer_class = ConversationSerializer
-    permission_classes = [permissions.IsAuthenticated]  # تسجيل دخول مطلوب
+    permission_classes = [permissions.IsAuthenticated, IsParticipantOfConversation]  # تسجيل دخول مطلوب
 
     # تمكين البحث والفلترة حسب أسماء المشاركين
     filter_backends = [filters.SearchFilter]
@@ -42,7 +43,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     queryset = Message.objects.all()  # كل الرسائل
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsParticipantOfConversation]
 
     def perform_create(self, serializer):
         # ربط الرسالة بالمستخدم الحالي عند الإنشاء
