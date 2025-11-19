@@ -5,6 +5,8 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+#logger is an instance of logging.Logger
+
 # إعداد File Handler
 file_handler = logging.FileHandler('requests.log') # سجل الطلبات في ملف requests.log
 formatter = logging.Formatter('%(message)s')
@@ -31,3 +33,29 @@ class RequestLoggingMiddleware:
         # 2. بعد معالجة الـ view (اختياري)
         # ------------------------------
         return response
+
+
+
+'''كل Logger عنده مستويات رسائل (Levels):
+
+المستوى	           معنى الاستخدام
+DEBUG    	تفاصيل صغيرة للتصحيح
+INFO	معلومات عادية عن سير العمل
+WARNING	     تحذيرات عن مشاكل محتملة
+ ERROR           	خطأ حصل في النظام
+CRITICAL	خطأ كبير ممكن يوقف النظام
+
+لما نكتب:
+
+logger.info(log_message)
+
+
+معناه:
+
+خذ الرسالة log_message
+
+ضعها في مستوى INFO
+
+أرسلها لكل handlers اللي مرتبطين بالـ Logger (في حالتنا FileHandler)
+
+باختصار: هذا السطر هو اللي فعليًا “يطبع” الرسالة في أي مكان Logger متصل به.'''
