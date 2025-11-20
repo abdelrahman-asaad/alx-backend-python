@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, filters, status
 from rest_framework.response import Response
-from rest_framework.decorators import action, api_view
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -16,6 +16,7 @@ from .filters import MessageFilter
 
 # ------------------- Register -------------------
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register_view(request):
     serializer = RegisterSerializer(data=request.data)
     if not serializer.is_valid():
