@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Conversation, Message, User
 from .serializers import (
     ConversationSerializer, MessageSerializer,
-    UserSerializer, RegisterSerializer, LoginSerializer
+    UserSerializer, RegisterSerializer
 )
 from .permissions import IsParticipantOfConversation
 from .pagination import MessagePagination

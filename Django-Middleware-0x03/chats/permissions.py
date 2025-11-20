@@ -1,4 +1,6 @@
-from rest_framework import permissions, BasePermission, is_authenticated
+from rest_framework import permissions
+from rest_framework.permissions import BasePermission
+
 #BasePermission is the base class for all custom permission classes in Django REST Framework.
 
 class IsOwnerOfConversation(BasePermission):

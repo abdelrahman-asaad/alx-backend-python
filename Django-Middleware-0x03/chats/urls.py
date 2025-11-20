@@ -2,7 +2,7 @@
 from django.urls import path, include
 from rest_framework_nested import routers  # ✅ NestedDefaultRouter
 from .views import ConversationViewSet, MessageViewSet
-from .views import login_view, register_view, logout_view
+from .views import register_view, logout_view
 
 # رواتر رئيسية للمحادثات
 router = routers.DefaultRouter()
