@@ -137,3 +137,34 @@ class OffensiveLanguageMiddleware:
 
 #get_client_ip is a helper method to extract the client's IP address from the request, 
 # considering possible proxy headers.
+
+#________________________________
+from django.http import JsonResponse
+
+class RolePermissionMiddleware:
+    """
+    Middleware to restrict access based on user role.
+    Only 'admin' or 'moderator' users can proceed.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Skip checking for unauthenticated users
+        if request.user.is_authenticated:
+            # get user role
+            role = getattr(request.user, "role", None) #we use getattr to safely get the 'role' attribute of the user object and if it doesn't exist, it returns None instead of raising an error.
+
+#reading the 'role' attribute from custom User model
+
+            # Allow only admin or moderator
+            if role not in ["admin", "moderator"]:
+                return JsonResponse(
+                    {"detail": "You do not have permission to access this resource."},
+                    status=403
+                )
+
+        # continue processing request
+        response = self.get_response(request)
+        return response
