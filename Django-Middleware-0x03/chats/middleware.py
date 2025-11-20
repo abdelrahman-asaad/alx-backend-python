@@ -70,3 +70,70 @@ class RestrictAccessByTimeMiddleware:
 
         # Continue normal flow
         return self.get_response(request)
+
+#________________________________
+from datetime import datetime, timedelta
+from django.http import JsonResponse
+
+
+class OffensiveLanguageMiddleware:
+    """
+    Limits chat messages from the same IP address.
+    Maximum: 5 messages per minute.
+    """
+
+    # Static in-memory store
+    ip_requests = {}             #represents a dictionary to store request timestamps per IP , such as {'123.456.789.000': [datetime1, datetime2, ...]}
+
+#ip_requests = {user_ip: [timestamp1, timestamp2, ...]} where user_ip is the 'KEY' and the 'VALUE' is a list of datetime objects representing the times of the requests from that IP address.
+
+#and it is middleware instance variable to keep track of request timestamps for each IP address.
+    
+    
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+
+        # Only apply to POST requests to chat APIs
+        if request.method == "POST" and request.path.startswith("/api/chats/"):
+
+            user_ip = self.get_client_ip(request)
+            now = datetime.now()
+
+            # Clean old entries
+            if user_ip not in self.ip_requests:
+                self.ip_requests[user_ip] = []
+
+            # Keep only requests in the last 1 minute (filtering)
+            one_minute_ago = now - timedelta(minutes=1) #one_minute_ago equals the current time minus one minute such as if now is 12:05, one_minute_ago will be 12:04 , any timestamp older than that will be removed from the list
+            self.ip_requests[user_ip] = [
+                time for time in self.ip_requests[user_ip] if time > one_minute_ago  #such as if the list had timestamps [12:03:40, 12:04:02, 12:04:18] and now is 12:05, after this line it will keep only [12:04:02, 12:04:18]
+            ]
+
+            # Check limit
+            if len(self.ip_requests[user_ip]) >= 5:
+                return JsonResponse(
+                    {
+                        "error": "Message rate limit exceeded. Max 5 messages per minute.",
+                        "limit": 5,
+                        "time_window": "1 minute"
+                    },
+                    status=429
+                )
+
+            # Add the current request timestamp
+            self.ip_requests[user_ip].append(now) #such as if now is 12:05:10, it will append that to the list of timestamps for that IP
+
+        return self.get_response(request)
+
+    def get_client_ip(self, request):
+        """Extract client IP address (supports proxy)."""
+        x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+        if x_forwarded_for:
+            return x_forwarded_for.split(",")[0]
+        return request.META.get("REMOTE_ADDR")
+
+
+#get_client_ip is a helper method to extract the client's IP address from the request, 
+# considering possible proxy headers.
