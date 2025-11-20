@@ -141,7 +141,7 @@ class OffensiveLanguageMiddleware:
 #________________________________
 from django.http import JsonResponse
 
-class RolePermissionMiddleware:
+class RolepermissionMiddleware:
     """
     Middleware to restrict access based on user role.
     Only 'admin' or 'moderator' users can proceed.
