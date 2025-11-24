@@ -116,7 +116,7 @@ from .serializers import MessageSerializer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def unread_messages_view(request):
-    unread_msgs = Message.unread.for_user(request.user).only('id', 'content', 'sender', 'timestamp')
+    unread_msgs = Message.unread.unread_for_user(request.user).only('id', 'content', 'sender', 'timestamp')
     serializer = MessageSerializer(unread_msgs, many=True) #serialize the queryset of unread messages
     return Response(serializer.data)
 #only 'id', 'content', 'sender', 'timestamp' fields are fetched from DB instead of all fields .. so 
