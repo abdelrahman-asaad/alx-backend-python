@@ -7,6 +7,7 @@ User = get_user_model()
 
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
+     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_messages")
     content = models.TextField()
     edited = models.BooleanField(default=False)  # New field
     timestamp = models.DateTimeField(auto_now_add=True)
