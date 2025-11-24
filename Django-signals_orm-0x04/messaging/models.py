@@ -7,7 +7,7 @@ User = get_user_model()
 
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
-     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_messages")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_messages")
     content = models.TextField()
     edited = models.BooleanField(default=False)  # New field
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -22,3 +22,10 @@ class MessageHistory(models.Model):
 
     def __str__(self):
         return f"History of message {self.message.id} at {self.edited_at}"
+
+class Notification(models.Model):
+    notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)

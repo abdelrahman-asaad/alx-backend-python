@@ -1,6 +1,6 @@
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from .models import Message, MessageHistory
+from .models import Message, MessageHistory, Notification
 
 @receiver(pre_save, sender=Message)
 def log_message_edit(sender, instance, **kwargs):
@@ -30,7 +30,10 @@ def log_message_edit(sender, instance, **kwargs):
         instance.edited = True
 
 @receiver(post_save, sender=Message)
-def message_saved(sender, instance, created, **kwargs):
-    # Required for autograder (uses post_save)
-    # No extra logic needed
-    pass
+def create_notification(sender, instance, created, **kwargs):
+    if created:
+        # Create notification for receiver
+        Notification.objects.create(
+            user=instance.receiver,         #instance of Message model class
+            message=instance
+        )
