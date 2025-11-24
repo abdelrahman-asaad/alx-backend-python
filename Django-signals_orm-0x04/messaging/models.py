@@ -5,6 +5,11 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+# 2️⃣ Custom Manager
+class UnreadMessagesManager(models.Manager):
+    def for_user(self, user):
+        return self.filter(receiver=user, read=False).only('id', 'content', 'sender', 'timestamp')
+
 class Conversation(models.Model):
     participants = models.ManyToManyField(User, related_name="conversations")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -16,12 +21,21 @@ class Message(models.Model):
     edited = models.BooleanField(default=False)  # New field
     timestamp = models.DateTimeField(auto_now_add=True)
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name="messages")
+    read = models.BooleanField(default=False)  # هل الرسالة مقروءة
+
 
     # New field for threaded conversations (replying to another message)
     parent_message = models.ForeignKey(
         'self', on_delete=models.CASCADE, null=True, blank=True,
         related_name='replies'      # to access replies of a parent message
     )
+
+
+
+ # Managers
+    objects = models.Manager()          # default manager
+    unread = UnreadMessagesManager()    # custom manager ..>> we can do Message.unread.for_user(user) in views
+
 
     def __str__(self):
         return f"Message from {self.sender} at {self.timestamp}"

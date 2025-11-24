@@ -106,3 +106,16 @@ def conversation_threaded_view(request, conversation):
     }
 ]
 '''
+#_______________________________________________
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import Message
+from .serializers import MessageSerializer
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def unread_messages_view(request):
+    unread_msgs = Message.unread.for_user(request.user)
+    serializer = MessageSerializer(unread_msgs, many=True)
+    return Response(serializer.data)
