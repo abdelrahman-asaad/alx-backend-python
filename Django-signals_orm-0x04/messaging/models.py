@@ -12,15 +12,46 @@ class Message(models.Model):
     edited = models.BooleanField(default=False)  # New field
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    # New field for threaded conversations (replying to another message)
+    parent_message = models.ForeignKey(
+        'self', on_delete=models.CASCADE, null=True, blank=True,
+        related_name='replies'
+    )
+
     def __str__(self):
         return f"Message from {self.sender} at {self.timestamp}"
+
+    def get_threaded_replies(self):
+        """
+        Recursive function to fetch all replies in a threaded manner
+        """
+        all_replies = []
+
+        def fetch_replies(message):
+            for reply in message.replies.all():
+                all_replies.append(reply)
+                fetch_replies(reply)
+
+        fetch_replies(self)
+        return all_replies
+
+#message.id = 5
+#message.replies.all() → كل الرسائل اللي parent_message_id = 5
+
+
+# Optional: Use prefetch_related in views to optimize queries
+# Example in a view:
+# messages = Message.objects.filter(parent_message__isnull=True)\
+#     .select_related('sender', 'receiver')\
+#     .prefetch_related('replies__sender', 'replies__receiver')
+
 
 class MessageHistory(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name="history")
     old_content = models.TextField()
     edited_at = models.DateTimeField(auto_now_add=True)
     edited_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    
+
 
     def __str__(self):
         return f"History of message {self.message.id} at {self.edited_at}"
