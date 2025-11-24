@@ -11,11 +11,11 @@ def log_message_edit(sender, instance, **kwargs):
     → نسجّل النسخة القديمة في MessageHistory
     """
 
-    if not instance.id:
-        return  # رسالة جديدة، مش تعديل# Skip new messages 
+    if not instance.id:  #= true because it hasn't been saved yet         #instance of Message model class 
+        return           # skip the rest if it's a new message
 
     try:
-        old_message = Message.objects.get(id=instance.id)
+        old_message = Message.objects.get(id=instance.id) # get the existing message from DB before save
     except Message.DoesNotExist:
         return
 
@@ -35,5 +35,7 @@ def create_notification(sender, instance, created, **kwargs):
         # Create notification for receiver
         Notification.objects.create(
             user=instance.receiver,         #instance of Message model class
-            message=instance
+            message=instance,
+            edited_by=instance.sender  # or request.user if available in context
+
         )

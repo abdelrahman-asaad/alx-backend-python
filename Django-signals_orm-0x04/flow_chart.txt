@@ -1,0 +1,27 @@
+User Action: Send or Edit Message
+            │
+            ▼
+  -------------------------
+  | Message Model (Message) |
+  -------------------------
+            │
+            ▼
+   Is this a NEW message? (instance.id exists?)
+          ┌───────────────┐
+          │               │
+        Yes               No
+          │               │
+          ▼               ▼
+   post_save signal   pre_save signal
+   (create notification) (log edit if content changed)
+          │
+          ▼
+   Notification Model   MessageHistory Model
+   - user = receiver    - message = old message
+   - message = instance - old_content = previous content
+   - created_at         - edited_at = now
+   - read = False       - save
+          │
+          ▼
+   Notification appears in receiver's inbox
+   MessageHistory stores previous versions of edited messages
