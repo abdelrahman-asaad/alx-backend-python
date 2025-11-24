@@ -116,8 +116,10 @@ from .serializers import MessageSerializer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def unread_messages_view(request):
-    unread_msgs = Message.unread.for_user(request.user)
+    unread_msgs = Message.unread.for_user(request.user).only('id', 'content', 'sender', 'timestamp')
     serializer = MessageSerializer(unread_msgs, many=True) #serialize the queryset of unread messages
     return Response(serializer.data)
-
+#only 'id', 'content', 'sender', 'timestamp' fields are fetched from DB instead of all fields .. so 
+# it optimizes the query performance
 #many=True because we are serializing a queryset (multiple messages)
+#Retrieve all unread messages for the authenticated user.
