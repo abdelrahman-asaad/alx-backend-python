@@ -5,12 +5,17 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class Conversation(models.Model):
+    participants = models.ManyToManyField(User, related_name="conversations")
+    created_at = models.DateTimeField(auto_now_add=True)
+
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_messages")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="received_messages") #to access received messages from same user model
     content = models.TextField()
     edited = models.BooleanField(default=False)  # New field
     timestamp = models.DateTimeField(auto_now_add=True)
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name="messages")
 
     # New field for threaded conversations (replying to another message)
     parent_message = models.ForeignKey(

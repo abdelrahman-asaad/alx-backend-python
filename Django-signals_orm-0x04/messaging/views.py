@@ -37,24 +37,72 @@ def fetch_replies(message):
         })
     return nested
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def conversation_threaded_view(request, conversation_id):
+def conversation_threaded_view(request, conversation):
     """
-    Retrieve all top-level messages in a conversation along with threaded replies.
+    GET: Retrieve all top-level messages in a conversation along with threaded replies.
+    POST: Create a new message in this conversation.
     """
-    # جلب الرسائل الرئيسية فقط (parent_message=None)
-    top_messages = (
-        Message.objects.filter(conversation_id=conversation_id, parent_message__isnull=True)
-        .select_related('sender', 'receiver')        # يقلل عدد الاستعلامات للFK
-        .prefetch_related('replies__sender', 'replies__receiver')  # يقلل عدد الاستعلامات للردود
-    )
+    if request.method == 'POST':
+        parent_id = request.data.get('parent_message')
+        content = request.data.get('content')
+        receiver_id = request.data.get('receiver')
 
+       # to get receiver user instance
+        receiver_user = User.objects.get(id=receiver_id)
+        parent_message = None
+        if parent_id:
+            parent_message = Message.objects.get(id=parent_id)
+
+        # إنشاء الرسالة مع sender من request.user ← هذا المطلوب
+        new_msg = Message.objects.create(
+            content=content,
+            sender=request.user,
+            receiver=receiver_user,
+            conversation=conversation,
+            parent_message=parent_message
+        )
+
+        return Response(MessageSerializer(new_msg).data, status=201) 
+    
+
+    # لو GET
+    top_messages = (
+        Message.objects.filter(conversation=conversation, parent_message__isnull=True) #top-level messages only
+        .select_related('sender', 'receiver') #to get sender and receiver user data in same query
+        .prefetch_related('replies__sender', 'replies__receiver') # to get replies and their senders/receivers
+    )                                                             #replies = related_name of parent_message
+                        #sender in replies__sender is the sender field in Message model
+    
     data = []
     for msg in top_messages:
         data.append({
-            "message": MessageSerializer(msg).data,
-            "replies": fetch_replies(msg)
+            "message": MessageSerializer(msg).data, #to serialize the top-level message 
+            "replies": fetch_replies(msg)           #to get all its replies in nested structure
         })
 
     return Response(data)
+
+#where "message" is the top-level message and "replies" is a list of its threaded replies
+# and they are key-value pairs in a dictionary inside a list 
+
+# Example response structure:
+'''[
+    {
+        "message": { "id": 1, "content": "Hello", "sender": ..., "receiver": ..., ... },
+        "replies": [
+            {
+                "reply": { "id": 2, "content": "Hi!", ... },
+                "replies": [
+                    { "reply": { ... }, "replies": [...] }
+                ]
+            }
+        ]
+    },
+    {
+        "message": { "id": 5, "content": "Another message", ... },
+        "replies": []
+    }
+]
+'''
