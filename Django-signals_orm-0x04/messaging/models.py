@@ -15,7 +15,7 @@ class Message(models.Model):
     # New field for threaded conversations (replying to another message)
     parent_message = models.ForeignKey(
         'self', on_delete=models.CASCADE, null=True, blank=True,
-        related_name='replies'
+        related_name='replies'      # to access replies of a parent message
     )
 
     def __str__(self):
@@ -30,7 +30,7 @@ class Message(models.Model):
         def fetch_replies(message):
             for reply in message.replies.all():
                 all_replies.append(reply)
-                fetch_replies(reply)
+                fetch_replies(reply) # هنا بنجيب الردود على الرد  nested replies
 
         fetch_replies(self)
         return all_replies
