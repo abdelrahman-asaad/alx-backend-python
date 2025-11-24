@@ -117,5 +117,7 @@ from .serializers import MessageSerializer
 @permission_classes([IsAuthenticated])
 def unread_messages_view(request):
     unread_msgs = Message.unread.for_user(request.user)
-    serializer = MessageSerializer(unread_msgs, many=True)
+    serializer = MessageSerializer(unread_msgs, many=True) #serialize the queryset of unread messages
     return Response(serializer.data)
+
+#many=True because we are serializing a queryset (multiple messages)

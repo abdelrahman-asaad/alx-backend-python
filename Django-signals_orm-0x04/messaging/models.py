@@ -6,9 +6,11 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # 2️⃣ Custom Manager
-class UnreadMessagesManager(models.Manager):
-    def for_user(self, user):
-        return self.filter(receiver=user, read=False).only('id', 'content', 'sender', 'timestamp')
+#class UnreadMessagesManager(models.Manager):
+#    def for_user(self, user):
+#        return self.filter(receiver=user, read=False).only('id', 'content', 'sender', 'timestamp')
+from .managers import UnreadMessagesManager
+
 
 class Conversation(models.Model):
     participants = models.ManyToManyField(User, related_name="conversations")
