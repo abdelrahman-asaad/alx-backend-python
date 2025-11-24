@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "rest_framework_simplejwt.token_blacklist", # ✅ JWT token blacklist app for logout
     'django_filters',  # ✅ فلترة البيانات
-
+    'messaging.apps.MessagingConfig',
 ]
 AUTH_USER_MODEL = 'chats.User'
 
