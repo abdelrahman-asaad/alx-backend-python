@@ -4,7 +4,11 @@ services:
   db:
     image: mysql:8.0
     restart: always
-    env_file: .env
+    environment:
+      MYSQL_DATABASE: messaging_db
+      MYSQL_USER: messenger
+      MYSQL_PASSWORD: StrongPassword123
+      MYSQL_ROOT_PASSWORD: RootPassword123
     ports:
       - "3306:3306"
     volumes:
@@ -12,12 +16,11 @@ services:
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
       - "8000:8000"
-    env_file: .env
     depends_on:
       - db
 
