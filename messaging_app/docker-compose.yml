@@ -5,7 +5,7 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_DATABASE: messaging_db
+      MYSQL_DB: messaging_db
       MYSQL_USER: messenger
       MYSQL_PASSWORD: StrongPassword123
       MYSQL_ROOT_PASSWORD: RootPassword123
