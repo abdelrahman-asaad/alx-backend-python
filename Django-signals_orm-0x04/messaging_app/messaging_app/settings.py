@@ -91,7 +91,7 @@ AUTHENTICATION_BACKENDS = [
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', #use local memory cache for development
         'LOCATION': 'unique-snowflake',
     }
 }

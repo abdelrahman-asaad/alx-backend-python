@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       MYSQL_DB: messaging_db
-      MYSQL_USER: messenger
+      MYSQL_USER: root
       MYSQL_PASSWORD: StrongPassword123
       MYSQL_ROOT_PASSWORD: RootPassword123
     ports:

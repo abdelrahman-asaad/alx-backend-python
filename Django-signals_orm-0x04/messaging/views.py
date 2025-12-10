@@ -125,7 +125,7 @@ def unread_messages_view(request):
 #Retrieve all unread messages for the authenticated user.
 
 #_______________week6_task5______________________
-# chats/views.py
+
 
 from django.views.decorators.cache import cache_page
 from rest_framework.decorators import api_view, permission_classes

@@ -9,6 +9,7 @@ User = get_user_model()
 #class UnreadMessagesManager(models.Manager):
 #    def for_user(self, user):
 #        return self.filter(receiver=user, read=False).only('id', 'content', 'sender', 'timestamp')
+
 from .managers import UnreadMessagesManager
 
 
