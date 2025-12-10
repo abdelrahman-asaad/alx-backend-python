@@ -1,0 +1,41 @@
+#!/bin/bash
+
+echo "🚀 Starting Kubernetes setup..."
+
+# 1️⃣ Check if minikube is installed
+if ! command -v minikube &> /dev/null
+then
+    echo "❌ Minikube is not installed. Please install it first:"
+    echo "👉 https://minikube.sigs.k8s.io/docs/start/"
+    exit 1
+fi
+
+echo "✅ Minikube is installed."
+
+# 2️⃣ Start minikube cluster
+echo "⏳ Starting Minikube Kubernetes cluster..."
+minikube start
+
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to start Minikube cluster."
+    exit 1
+fi
+
+echo "✅ Minikube cluster started successfully."
+
+# 3️⃣ Verify cluster info
+echo "🔍 Verifying cluster status..."
+kubectl cluster-info
+
+if [ $? -ne 0 ]; then
+    echo "❌ kubectl cannot connect to the cluster."
+    exit 1
+fi
+
+echo "✅ Cluster is running."
+
+# 4️⃣ Retrieve running pods
+echo "📦 Fetching available pods..."
+kubectl get pods -A
+
+echo "🎉 All done! Kubernetes cluster is up and pods are listed."
