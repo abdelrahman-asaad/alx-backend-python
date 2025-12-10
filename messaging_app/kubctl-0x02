@@ -1,0 +1,25 @@
+#!/bin/bash
+
+echo "🚀 Starting Blue-Green Deployment..."
+
+# 1️⃣ Deploy Blue Version
+echo "🔵 Deploying BLUE version..."
+kubectl apply -f blue_deployment.yaml
+
+# 2️⃣ Deploy Green Version
+echo "🟢 Deploying GREEN version..."
+kubectl apply -f green_deployment.yaml
+
+sleep 5
+
+# 3️⃣ Check Pods
+echo "📦 Current Pods:"
+kubectl get pods -o wide
+
+# 4️⃣ Check GREEN Logs for errors
+GREEN_POD=$(kubectl get pods -l version=green -o jsonpath="{.items[0].metadata.name}")
+
+echo "📜 Checking logs for GREEN version ($GREEN_POD)..."
+kubectl logs $GREEN_POD | grep -i error
+
+echo "🎉 Blue-Green deployment applied!"
