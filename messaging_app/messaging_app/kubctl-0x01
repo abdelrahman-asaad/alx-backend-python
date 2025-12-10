@@ -1,0 +1,38 @@
+#!/bin/bash
+
+echo "🚀 Scaling Django Kubernetes Deployment..."
+
+# 1️⃣ Scale to 3 replicas
+echo "➡️ Scaling deployment 'messaging-app' to 3 replicas..."
+kubectl scale deployment messaging-app --replicas=3
+
+echo "⏳ Waiting for pods to start..."
+sleep 5
+
+# 2️⃣ Verify pods
+echo "📦 Listing running pods:"
+kubectl get pods -o wide
+
+# 3️⃣ Load Testing with wrk
+echo "🔥 Starting load testing with wrk..."
+
+# Get a pod name to port-forward inside the cluster
+POD=$(kubectl get pods -l app=messaging-app -o jsonpath="{.items[0].metadata.name}")
+
+echo "🔁 Port-forwarding $POD to localhost:8000..."
+kubectl port-forward "$POD" 8000:8000 > /dev/null 2>&1 &
+
+PORT_PID=$!
+sleep 2
+
+echo "📊 Running wrk benchmark for 10 seconds..."
+wrk -t2 -c50 -d10s http://localhost:8000/
+
+# Stop port-forward
+kill $PORT_PID
+
+# 4️⃣ Monitor resource usage
+echo "📈 Resource usage:"
+kubectl top pods
+
+echo "🎉 Done!"
