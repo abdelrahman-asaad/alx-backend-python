@@ -1,0 +1,37 @@
+#!/bin/bash
+
+echo "🚀 Starting Rolling Update for messaging-app-blue..."
+
+# 1️⃣ Apply updated Deployment (image 2.0)
+kubectl apply -f blue_deployment.yaml
+
+# 2️⃣ Monitor rollout progress
+echo "⏳ Monitoring rollout status..."
+kubectl rollout status deployment/messaging-app-blue
+
+# 3️⃣ Test app for downtime
+echo "🔁 Testing app availability with curl..."
+
+# Get one pod name to port-forward
+POD=$(kubectl get pods -l version=blue -o jsonpath="{.items[0].metadata.name}")
+
+# Port-forward in background
+kubectl port-forward "$POD" 8000:8000 > /dev/null 2>&1 &
+PF_PID=$!
+sleep 2
+
+# Continuous curl for 10 seconds
+for i in {1..10}
+do
+  curl -s -o /dev/null -w "Request $i: %{http_code}\n" http://localhost:8000/
+  sleep 1
+done
+
+# Stop port-forward
+kill $PF_PID
+
+# 4️⃣ Verify pods
+echo "📦 Current Pods after Rolling Update:"
+kubectl get pods -o wide
+
+echo "🎉 Rolling update complete!"
