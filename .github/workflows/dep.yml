@@ -1,0 +1,33 @@
+name: Build and Push Docker Image
+
+# أي push على الفرع main هيشغل ال workflow
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ جيب الكود من الريبو
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2️⃣ سجل دخول على Docker باستخدام secrets
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}  # خزّن اسم المستخدم في secrets
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}  # خزّن كلمة السر في secrets
+
+      # 3️⃣ Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/messaging_app:latest .
+
+      # 4️⃣ Push Docker image to Docker Hub
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/messaging_app:latest
