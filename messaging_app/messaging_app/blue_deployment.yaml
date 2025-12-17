@@ -19,6 +19,6 @@ spec:
     spec:
       containers:
       - name: messaging-app
-        image: yourdocker/messaging-app:2.0   # ← غيرها لإيمدج النسخة الحالية
+        image: yourdocker/messaging-app:2.0   # ← غيرها لإيمدج النسخة الحاليةاو # اسم الـ image اللي عملته جوه Minikube
         ports:
         - containerPort: 8000
