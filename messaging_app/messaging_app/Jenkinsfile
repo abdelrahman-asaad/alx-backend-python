@@ -11,13 +11,11 @@ pipeline {
             }
         }
 
-        stage('Set up Python Environment') {
+        stage('Install Dependencies') {
             steps {
                 sh '''
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install --upgrade pip
-                pip install -r messaging_app/requirements.txt
+                pip3 install --upgrade pip
+                pip3 install -r messaging_app/requirements.txt
                 '''
             }
         }
@@ -25,7 +23,6 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh '''
-                . venv/bin/activate
                 pytest messaging_app/tests \
                   --junitxml=messaging_app/test-report.xml
                 '''
